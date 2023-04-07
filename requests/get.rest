@@ -2,3 +2,15 @@ GET http://localhost:3001/api/persons
 
 ###
 GET http://localhost:3001/info
+
+### anna
+GET http://localhost:3001/api/persons/642f18acb578d9b9ffee5218
+
+### vito
+GET http://localhost:3001/api/persons/642f1901ccea1165f6da7f96
+
+### invalid
+GET http://localhost:3001/api/persons/1
+
+### doesn't exist
+GET http://localhost:3001/api/persons/642f1901ccea1165f6da7f90
