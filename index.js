@@ -62,29 +62,14 @@ app.post("/api/persons", (request, response, next) => {
     });
   }
 
-  Person.find({ name: body.name })
-    .then((persons) => {
-      if (persons.length) {
-        const id = persons[0]._id.toString();
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
 
-        const person = {
-          name: body.name,
-          number: body.number,
-        };
-        Person.findByIdAndUpdate(id, person, { new: true }).then(
-          (updatedPerson) => {
-            return response.json(updatedPerson);
-          }
-        );
-      } else {
-        const person = new Person({
-          name: body.name,
-          number: body.number,
-        });
-
-        person.save().then((savedPerson) => response.json(savedPerson));
-      }
-    })
+  person
+    .save()
+    .then((savedPerson) => response.json(savedPerson))
     .catch((error) => next(error));
 });
 
