@@ -63,7 +63,7 @@ Content-Type: application/json
 
 {
     "name": "she",
-    "number": "12-4567"
+    "number": "12-345678"
 }
 
 ###
@@ -71,7 +71,16 @@ POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
-    "name": "yo",
+    "name": "we",
+    "number": "12-0"
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "him",
     "number": "1-4567"
 }
 
