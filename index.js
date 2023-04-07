@@ -23,10 +23,12 @@ app.get("/api/persons", (request, response, next) => {
 app.get("/info", (request, response) => {
   const dateNow = Date(Date.now());
 
-  response.send(
-    `<div>Phonebook has info for ${persons.length} people</div>
+  Person.find({}).then((persons) => {
+    response.send(
+      `<div>Phonebook has info for ${persons.length} people</div>
     <div>${dateNow}</div>`
-  );
+    );
+  });
 });
 
 app.get("/api/persons/:id", (request, response) => {
