@@ -10,7 +10,7 @@ console.log("connecting to", url);
 
 mongoose
   .connect(url)
-  .then((result) => {
+  .then(() => {
     console.log("connected to MongoDB");
   })
   .catch((error) => {
@@ -26,7 +26,7 @@ const personSchema = new mongoose.Schema({
   number: {
     type: String,
     validate: {
-      validator: function (v) {
+      validator(v) {
         return /\d{2,3}-\d{6,}/.test(v);
       },
       message: (props) => `${props.value} is not a valid phone number!`,
@@ -37,33 +37,14 @@ const personSchema = new mongoose.Schema({
 
 personSchema.set("toJSON", {
   transform: (document, returnedObject) => {
+    // eslint-disable-next-line no-param-reassign, no-underscore-dangle
     returnedObject.id = returnedObject._id.toString();
 
+    // eslint-disable-next-line no-underscore-dangle, no-param-reassign
     delete returnedObject._id;
+    // eslint-disable-next-line no-underscore-dangle, no-param-reassign
     delete returnedObject.__v;
   },
 });
-
-const fetchAll = () => {
-  Person.find({}).then((result) => {
-    console.log("phonebook:");
-    result.forEach((person) => {
-      console.log(person.name, person.number);
-    });
-    mongoose.connection.close();
-  });
-};
-
-const savePerson = (name, number) => {
-  const person = new Person({
-    name: name,
-    number: number,
-  });
-
-  person.save().then((result) => {
-    console.log("person saved!");
-    mongoose.connection.close();
-  });
-};
 
 module.exports = mongoose.model("Person", personSchema);
