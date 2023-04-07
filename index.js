@@ -13,32 +13,6 @@ app.use(
 );
 app.use(cors());
 app.use(express.static("build"));
-//   {
-//     id: 1,
-//     name: "Arto Hellas",
-//     number: "040-123456",
-//   },
-//   {
-//     id: 2,
-//     name: "Ada Lovelace",
-//     number: "39-44-5323523",
-//   },
-//   {
-//     id: 3,
-//     name: "Dan Abramov",
-//     number: "12-43-234345",
-//   },
-//   {
-//     id: 4,
-//     name: "Mary Poppendieck",
-//     number: "39-23-6423122",
-//   },
-//   {
-//     id: 5,
-//     name: "test",
-//     number: "123",
-//   },
-// ];
 
 app.get("/api/persons", (request, response, next) => {
   Person.find({})
@@ -69,7 +43,7 @@ app.delete("/api/persons/:id", (request, response) => {
     .catch((error) => next(error));
 });
 
-app.post("/api/persons", (request, response) => {
+app.post("/api/persons", (request, response, next) => {
   const body = request.body;
 
   if (!body.name || !body.number) {
@@ -78,20 +52,29 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  // if (persons.find((p) => p.name === body.name)) {
-  //   return response.status(400).json({
-  //     error: "person already exists in phonebook",
-  //   });
-  // }
+  Person.find({ name: body.name })
+    .then((persons) => {
+      if (persons.length) {
+        const id = persons[0]._id.toString();
 
-  const person = new Person({
-    name: body.name,
-    number: body.number,
-  });
+        const person = {
+          name: body.name,
+          number: body.number,
+        };
+        Person.findByIdAndUpdate(id, person, { new: true }).then(
+          (updatedPerson) => {
+            return response.json(updatedPerson);
+          }
+        );
+      } else {
+        const person = new Person({
+          name: body.name,
+          number: body.number,
+        });
 
-  person
-    .save()
-    .then((savedPerson) => response.json(savedPerson))
+        person.save().then((savedPerson) => response.json(savedPerson));
+      }
+    })
     .catch((error) => next(error));
 });
 

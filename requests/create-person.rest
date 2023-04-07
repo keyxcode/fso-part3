@@ -3,7 +3,7 @@ Content-Type: application/json
 
 {
     "name": "abc",
-    "number": "123"
+    "number": "123456789"
 }
 
 ###
@@ -27,7 +27,7 @@ Content-Type: application/json
 
 {
     "name": "Arto Hellas",
-    "number": "0"
+    "number": "01234"
 }
 
 ###
@@ -36,5 +36,5 @@ Content-Type: application/json
 
 {
     "name": "Delete me",
-    "number": "0"
+    "number": "123"
 }
