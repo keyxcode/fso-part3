@@ -47,3 +47,39 @@ Content-Type: application/json
     "name": "me",
     "number": "123"
 }
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "you",
+    "number": "123-4567"
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "she",
+    "number": "12-4567"
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "yo",
+    "number": "1-4567"
+}
+
+###
+POST http://localhost:3001/api/persons
+Content-Type: application/json
+
+{
+    "name": "they",
+    "number": "1456789"
+}
