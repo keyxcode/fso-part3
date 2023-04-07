@@ -13,8 +13,6 @@ app.use(
 );
 app.use(cors());
 app.use(express.static("build"));
-
-// let persons = [
 //   {
 //     id: 1,
 //     name: "Arto Hellas",
@@ -42,8 +40,10 @@ app.use(express.static("build"));
 //   },
 // ];
 
-app.get("/api/persons", (request, response) => {
-  Person.find({}).then((persons) => response.json(persons));
+app.get("/api/persons", (request, response, next) => {
+  Person.find({})
+    .then((persons) => response.json(persons))
+    .catch((error) => next(error));
 });
 
 app.get("/info", (request, response) => {
@@ -89,8 +89,22 @@ app.post("/api/persons", (request, response) => {
     number: body.number,
   });
 
-  person.save().then((savedPerson) => response.json(savedPerson));
+  person
+    .save()
+    .then((savedPerson) => response.json(savedPerson))
+    .catch((error) => next(error));
 });
 
-const PORT = 3001;
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message);
+
+  if (error.name === "CastError") {
+    return response.status(400).send({ error: "malformatted id" });
+  }
+
+  next(error);
+};
+app.use(errorHandler);
+
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
