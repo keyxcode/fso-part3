@@ -70,10 +70,10 @@ app.delete("/api/persons/:id", (request, response) => {
   return response.status(204).end();
 });
 
-const generateRandomId = () => {
-  const RANGE = 100000;
-  return Math.floor(Math.random() * RANGE);
-};
+// const generateRandomId = () => {
+//   const RANGE = 100000;
+//   return Math.floor(Math.random() * RANGE);
+// };
 
 app.post("/api/persons", (request, response) => {
   const body = request.body;
@@ -84,20 +84,18 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  if (persons.find((p) => p.name === body.name)) {
-    return response.status(400).json({
-      error: "person already exists in phonebook",
-    });
-  }
+  // if (persons.find((p) => p.name === body.name)) {
+  //   return response.status(400).json({
+  //     error: "person already exists in phonebook",
+  //   });
+  // }
 
-  const person = {
-    ...body,
-    id: generateRandomId(),
-  };
+  const person = new Person({
+    name: body.name,
+    number: body.number,
+  });
 
-  persons = persons.concat(person);
-
-  response.json(person);
+  person.save().then((savedPerson) => response.json(savedPerson));
 });
 
 const PORT = 3001;
