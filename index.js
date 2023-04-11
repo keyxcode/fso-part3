@@ -7,18 +7,13 @@ const Person = require("./models/person");
 const app = express();
 
 app.use(express.json());
+app.use(cors());
+app.use(express.static("build"));
+
 morgan.token("body", (request) => JSON.stringify(request.body));
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
-app.use(cors());
-app.use(express.static("build"));
-
-app.get("/api/persons", (request, response, next) => {
-  Person.find({})
-    .then((persons) => response.json(persons))
-    .catch((error) => next(error));
-});
 
 app.get("/info", (request, response, next) => {
   const dateNow = Date(Date.now());
@@ -30,6 +25,12 @@ app.get("/info", (request, response, next) => {
     <div>${dateNow}</div>`
       );
     })
+    .catch((error) => next(error));
+});
+
+app.get("/api/persons", (request, response, next) => {
+  Person.find({})
+    .then((persons) => response.json(persons))
     .catch((error) => next(error));
 });
 
@@ -45,19 +46,10 @@ app.get("/api/persons/:id", (request, response, next) => {
     .catch((error) => next(error));
 });
 
-app.delete("/api/persons/:id", (request, response, next) => {
-  Person.findByIdAndRemove(request.params.id)
-    .then(() => response.status(204).end())
-    .catch((error) => next(error));
-});
-
 app.post("/api/persons", (request, response, next) => {
-  const { body } = request;
+  const { name, number } = request.body;
 
-  const person = new Person({
-    name: body.name,
-    number: body.number,
-  });
+  const person = new Person({ name, number });
 
   person
     .save()
@@ -65,14 +57,22 @@ app.post("/api/persons", (request, response, next) => {
     .catch((error) => next(error));
 });
 
+app.delete("/api/persons/:id", (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(() => response.status(204).end())
+    .catch((error) => next(error));
+});
+
 app.put("/api/persons/:id", (request, response, next) => {
   const { name, number } = request.body;
 
-  Person.findByIdAndUpdate(
-    request.params.id,
-    { name, number },
-    { new: true, runValidators: "true", context: "query" }
-  )
+  const person = { name, number };
+
+  Person.findByIdAndUpdate(request.params.id, person, {
+    new: true,
+    runValidators: "true",
+    context: "query",
+  })
     .then((updatedPerson) => response.json(updatedPerson))
     .catch((err) => next(err));
 });

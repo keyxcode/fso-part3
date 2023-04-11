@@ -9,11 +9,11 @@ const Person = mongoose.model("Person", personSchema);
 
 const savePerson = (name, number) => {
   const person = new Person({
-    name: name,
-    number: number,
+    name,
+    number,
   });
 
-  person.save().then((result) => {
+  person.save().then(() => {
     console.log("person saved!");
     mongoose.connection.close();
   });
